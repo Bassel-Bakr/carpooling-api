@@ -31,8 +31,10 @@ class LocalDriver extends DatabaseDriverInterface {
         this.users.push({
             id: this.counter++,
             name: user.name,
-            password: user.passwod
+            password: user.password
         });
+
+        console.log(this.users);
 
         if (!callback) callback = this.defaultCallback;
         callback();
@@ -44,14 +46,14 @@ class LocalDriver extends DatabaseDriverInterface {
         if (!Number.isInteger(id))
             throw "sql injection!!!";
         else
-            callback(null, user.filter(user => user.id == id));
+            callback(null, this.users.filter(user => user.id == id));
 
     }
 
     getUserByName(name, callback) {
         // TODO: validate input and protect against sql injection
         if(!callback) callback = this.defaultCallback;
-        callback(null, user.filter(user => user.name == name));
+        callback(null, this.users.filter(user => user.name == name));
     }
 }
 

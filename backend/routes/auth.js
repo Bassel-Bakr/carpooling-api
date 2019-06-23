@@ -1,9 +1,6 @@
-module.exports = (passport) => {
+module.exports = (passport, database) => {
     const express = require("express");
     const router = express.Router();
-    // const dbDriver = new require("../sqlDriver");
-    // const database = new dbDriver();
-    // database.connect();
 
     router.get("/login", (req, res) => res.render("login"));
     router.get("/register", (req, res) => res.render("register"));

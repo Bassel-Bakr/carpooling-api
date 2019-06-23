@@ -11,7 +11,6 @@ const LocalStrategy = require("passport-local").Strategy;
 const app = express();
 
 // database
-
 const dbDriver = new require("./dbDriver");
 const database = new dbDriver();
 database.connect();
@@ -78,7 +77,8 @@ passport.deserializeUser((id, done) => {
     database.getUserById(id, (err, result) => {
         console.log(id, result);
         if (result && result.length == 1) {
-            let user = result[0];
+            // clone
+            let user = JSON.parse(JSON.stringify(result[0]));
             delete user.password;
             done(null, user);
         } else {
@@ -105,7 +105,7 @@ function authMiddleware(req, res, next) {
 }
 
 function bindRoutes(app) {
-    const auth = require("./routes/auth")(passport);
+    const auth = require("./routes/auth")(passport, database);
     app.use(auth);
 }
 

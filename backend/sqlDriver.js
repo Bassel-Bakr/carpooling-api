@@ -1,7 +1,7 @@
-const DatabaseDriver = require("./dbDriver");
+const DatabaseDriverInterface = require("./dbDriverInterface");
 const mysql = require("mysql");
 
-class SqlDriver extends DatabaseDriver {
+class SqlDriver extends DatabaseDriverInterface {
     constructor() {
         super();
         console.log("using sql db driver");
