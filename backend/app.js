@@ -12,7 +12,7 @@ const app = express();
 
 // database
 
-const dbDriver = new require("./sqlDriver");
+const dbDriver = new require("./dbDriver");
 const database = new dbDriver();
 database.connect();
 
