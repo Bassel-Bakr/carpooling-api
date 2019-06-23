@@ -1,2 +1,2 @@
 const dbDriver = new require("./localDriver");
-export default dbDriver;
+module.exports = dbDriver;
