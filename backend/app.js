@@ -40,18 +40,16 @@ app.use(passport.session());
 
 passport.use(
     new LocalStrategy({
-            usernameField: "name",
-            passwordField: "password"
-        },
+        usernameField: "name",
+        passwordField: "password"
+    },
         (username, password, done) => {
-            database.getUserByName(username, (err, result) => {
-                if (err || !result || result.length == 0) {
+            database.getUserByName(username, (err, user) => {
+                if (err || !user) {
                     done(null, false, {
                         message: "No such user!"
                     });
                 } else {
-                    const user = result[0];
-
                     // TODO: validate and ues bcrypt
                     if (user.password === password) {
                         done(null, user);
@@ -68,19 +66,19 @@ passport.use(
 
 passport.serializeUser((user, done) => {
     console.log("serialize");
-    console.log(user);
+    // console.log(user);
     done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
     console.log("deserialize");
-    database.getUserById(id, (err, result) => {
-        console.log(id, result);
-        if (result && result.length == 1) {
+    database.getUserById(id, (err, user) => {
+        // console.log(id, user);
+        if (user) {
             // clone
-            let user = JSON.parse(JSON.stringify(result[0]));
-            delete user.password;
-            done(null, user);
+            let userCopy = JSON.parse(JSON.stringify(user));
+            delete userCopy.password;
+            done(null, userCopy);
         } else {
             done(null, null);
         }
@@ -91,7 +89,13 @@ passport.deserializeUser((id, done) => {
 bindRoutes(app);
 
 function isAuth(req, res) {
-    res.status(req.isAuthenticated() ? 200 : 401).end(JSON.stringify(req.user));
+    if (req.isAuthenticated()) {
+        const user = JSON.stringify(req.user)
+        delete user.pasword;
+        res.status(200).end(user);
+    } else {
+        res.status(401).end();
+    }
 }
 
 app.get("/is_auth", isAuth);
@@ -105,8 +109,10 @@ function authMiddleware(req, res, next) {
 }
 
 function bindRoutes(app) {
-    const auth = require("./routes/auth")(passport, database);
-    app.use(auth);
+    const authRoutes = require("./routes/auth")(passport, database);
+    const apiRoutes = require("./routes/api")(database);
+    app.use(authRoutes);
+    app.use("/api", apiRoutes);
 }
 
 

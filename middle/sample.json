@@ -1,0 +1,188 @@
+{
+    "hints": {
+        "visited_nodes.average": "76.0",
+        "visited_nodes.sum": "76"
+    },
+    "info": {
+        "copyrights": [
+            "GraphHopper",
+            "OpenStreetMap contributors"
+        ],
+        "took": 7
+    },
+    "paths": [
+        {
+            "distance": 1580.92,
+            "weight": 241.302275,
+            "time": 217582,
+            "transfers": 0,
+            "points_encoded": false,
+            "bbox": [
+                31.351624,
+                30.061367,
+                31.358061,
+                30.06912
+            ],
+            "points": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        31.355761,
+                        30.069043
+                    ],
+                    [
+                        31.355926,
+                        30.06912
+                    ],
+                    [
+                        31.35621,
+                        30.068718
+                    ],
+                    [
+                        31.356746,
+                        30.067844
+                    ],
+                    [
+                        31.356898,
+                        30.067553
+                    ],
+                    [
+                        31.357386,
+                        30.066462
+                    ],
+                    [
+                        31.357573,
+                        30.065856
+                    ],
+                    [
+                        31.357705,
+                        30.065356
+                    ],
+                    [
+                        31.357954,
+                        30.064122
+                    ],
+                    [
+                        31.358061,
+                        30.062663
+                    ],
+                    [
+                        31.358023,
+                        30.062071
+                    ],
+                    [
+                        31.35797,
+                        30.061641
+                    ],
+                    [
+                        31.35712,
+                        30.061711
+                    ],
+                    [
+                        31.356981,
+                        30.061709
+                    ],
+                    [
+                        31.353674,
+                        30.061367
+                    ],
+                    [
+                        31.353552,
+                        30.062158
+                    ],
+                    [
+                        31.351624,
+                        30.061949
+                    ]
+                ]
+            },
+            "instructions": [
+                {
+                    "distance": 18.053,
+                    "heading": 61.59,
+                    "sign": 0,
+                    "interval": [
+                        0,
+                        1
+                    ],
+                    "text": "Continue",
+                    "time": 4062,
+                    "street_name": ""
+                },
+                {
+                    "distance": 871.05,
+                    "sign": 2,
+                    "interval": [
+                        1,
+                        11
+                    ],
+                    "text": "Turn right onto حسن المأمون",
+                    "time": 97988,
+                    "street_name": "حسن المأمون"
+                },
+                {
+                    "distance": 416.093,
+                    "sign": 2,
+                    "interval": [
+                        11,
+                        14
+                    ],
+                    "text": "Turn right onto شارع ابو داوود الظاهرى",
+                    "time": 53496,
+                    "street_name": "شارع ابو داوود الظاهرى"
+                },
+                {
+                    "distance": 88.731,
+                    "sign": 2,
+                    "interval": [
+                        14,
+                        15
+                    ],
+                    "text": "Turn right onto شارع ذكي شرف",
+                    "time": 19964,
+                    "street_name": "شارع ذكي شرف"
+                },
+                {
+                    "distance": 186.993,
+                    "sign": -2,
+                    "interval": [
+                        15,
+                        16
+                    ],
+                    "text": "Turn left onto شارع محمد كامل الحاروني",
+                    "time": 42072,
+                    "street_name": "شارع محمد كامل الحاروني"
+                },
+                {
+                    "distance": 0,
+                    "sign": 4,
+                    "last_heading": 263.2970251744185,
+                    "interval": [
+                        16,
+                        16
+                    ],
+                    "text": "Arrive at destination",
+                    "time": 0,
+                    "street_name": ""
+                }
+            ],
+            "legs": [],
+            "details": {},
+            "ascend": 16.86699676513672,
+            "descend": 10.89999771118164,
+            "snapped_waypoints": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        31.355761,
+                        30.069043
+                    ],
+                    [
+                        31.351624,
+                        30.061949
+                    ]
+                ]
+            }
+        }
+    ]
+}

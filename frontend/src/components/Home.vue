@@ -12,9 +12,6 @@ export default {
     };
   },
   methods: {
-    f() {
-      console.log("PISS OFF!!!");
-    }
   }
 };
 </script>

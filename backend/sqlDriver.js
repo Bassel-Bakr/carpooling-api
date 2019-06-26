@@ -1,5 +1,6 @@
 const DatabaseDriverInterface = require("./dbDriverInterface");
 const mysql = require("mysql");
+const errors = require("../middle/errors");
 
 class SqlDriver extends DatabaseDriverInterface {
     constructor() {
@@ -26,7 +27,11 @@ class SqlDriver extends DatabaseDriverInterface {
 
     addUser(user, callback) {
         // TODO: validate
-        this.connection.query(`insert into ${this.table}(name, password) values('${user.name}', '${user.password}');`, (err, res) => callback(err, res));
+        this.connection.query(
+            `insert into ${this.table}(name, password) values('${user.name}', '${user.password}');`,
+            (err, res) => {
+                callback(err, res);
+            });
     }
 
     getUserById(id, callback) {
@@ -35,14 +40,14 @@ class SqlDriver extends DatabaseDriverInterface {
             throw "sql injection!!!";
         else
             this.connection.query(`select * from ${this.table} where id = ${id}`, (err, res) => {
-                callback(err, res);
+                callback(err, res[0]);
             });
     }
 
     getUserByName(name, callback) {
         // TODO: validate input and protect against sql injection
         this.connection.query(`select * from ${this.table} where name = '${name}'`, (err, res) => {
-            callback(err, res);
+            callback(err, res[0]);
         });
     }
 }

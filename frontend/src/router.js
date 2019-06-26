@@ -3,6 +3,7 @@ import Router from "vue-router";
 
 Vue.use(Router);
 
+import API from "./components/API";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -13,6 +14,12 @@ export const routes = [ // all routes
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    guestOnly: false,
+    path: '/api',
+    name: 'API',
+    component: API
   },
   {
     guestOnly: true,

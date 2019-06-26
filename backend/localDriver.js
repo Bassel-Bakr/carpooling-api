@@ -1,5 +1,5 @@
 const DatabaseDriverInterface = require("./dbDriverInterface");
-const mysql = require("mysql");
+const errors = require("../middle/errors");
 
 class LocalDriver extends DatabaseDriverInterface {
     constructor() {
@@ -9,11 +9,13 @@ class LocalDriver extends DatabaseDriverInterface {
         this.users = [{
                 id: 1,
                 name: "Bassel",
+                email: "basselbakr@gmail.com",
                 password: "a"
             },
             {
                 id: 2,
                 name: "Hossam",
+                email: "ConanCode96@gmail.com",
                 password: "a"
             }
         ]
@@ -23,21 +25,31 @@ class LocalDriver extends DatabaseDriverInterface {
     }
 
     connect(callback) {
-        // just kidding!
+        // no such thing as connecting
     }
 
     addUser(user, callback) {
+        if (!callback) callback = this.defaultCallback;
+
         // TODO: validate
+        let usr = this.users.filter(u => u.name == user.name);
+
+        // exists?
+        if (usr.length == 1)
+            return callback(null, errors.database.exists);
+
         this.users.push({
             id: this.counter++,
             name: user.name,
             password: user.password
         });
 
-        console.log(this.users);
+        usr = this.users.filter(u => u.name == user.name);
 
-        if (!callback) callback = this.defaultCallback;
-        callback();
+        if(usr.length == 1)
+            callback(null, errors.database.created);
+        else
+            callback(errors.database.failed, null);
     }
 
     getUserById(id, callback) {
@@ -46,14 +58,14 @@ class LocalDriver extends DatabaseDriverInterface {
         if (!Number.isInteger(id))
             throw "sql injection!!!";
         else
-            callback(null, this.users.filter(user => user.id == id));
+            callback(null, this.users.filter(user => user.id == id)[0]);
 
     }
 
     getUserByName(name, callback) {
         // TODO: validate input and protect against sql injection
-        if(!callback) callback = this.defaultCallback;
-        callback(null, this.users.filter(user => user.name == name));
+        if (!callback) callback = this.defaultCallback;
+        callback(null, this.users.filter(user => user.name == name)[0]);
     }
 }
 

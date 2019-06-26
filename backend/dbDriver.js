@@ -1,2 +1,2 @@
-const dbDriver = new require("./localDriver");
+const dbDriver = new require("./mongoDriver");
 module.exports = dbDriver;

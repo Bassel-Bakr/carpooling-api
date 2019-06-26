@@ -1,15 +1,16 @@
 <template>
   <v-app :dark="darkTheme" @userLogin="update">
-    <v-toolbar dense app>
+    <v-toolbar app>
       <v-toolbar-side-icon @click.stop="showDrawer = !showDrawer"/>
       <v-toolbar-side-icon @click.stop="darkTheme = !darkTheme">
         <v-icon>brightness_medium</v-icon>
       </v-toolbar-side-icon>
+      <div v-if="user">Hello {{ user.name }}</div>
       <v-spacer/>
 
       <v-toolbar-items></v-toolbar-items>
       <!-- if logged in -->
-      <div v-if="logged">
+      <div v-if="user">
         <v-toolbar-side-icon @click.stop="logout">
           <v-icon>directions_run</v-icon>
         </v-toolbar-side-icon>
@@ -22,7 +23,7 @@
     </v-toolbar>
 
     <v-navigation-drawer app v-model="showDrawer">
-      <v-toolbar dense flat>
+      <v-toolbar>
         <v-list>
           <v-list-tile>
             <v-list-tile-title class="title">Pages</v-list-tile-title>
@@ -65,22 +66,19 @@ export default {
   data() {
     return {
       user: null,
-      logged: false,
       showDrawer: false,
       darkTheme: true
     };
   },
   computed: {
     routes() {
-      return routes.filter(
-        route => {
-          if(this.logged) {
-            return route.userOnly || !route.guestOnly;
-          } else {
-            return !route.userOnly || route.guestOnly;
-          }
+      return routes.filter(route => {
+        if (this.user) {
+          return route.userOnly || !route.guestOnly;
+        } else {
+          return !route.userOnly || route.guestOnly;
         }
-      );
+      });
     }
   },
   methods: {
@@ -91,15 +89,18 @@ export default {
       router.replace("Register");
     },
     logout() {
-      this.$http
-        .get("api/logout")
-        .then(res => this.logged = false, err => console.log(err));
+      this.$http.get("api/logout").then(
+        res => {
+          this.user = false;
+        },
+        err => console.log(err)
+      );
     },
     update() {
       console.log("updating data");
       this.$http.get("api/is_auth").then(res => {
         console.log(res);
-        this.logged = res.status == 200;
+        this.user = res.status == 200 ? res.body : null;
       });
     }
   },
@@ -134,6 +135,9 @@ export default {
 // @media only screen and (min-width: 1080px)
 //   #app
 //     grid-template-columns: 1fr 1fr 1fr 1fr
+
+.title
+  text-align: center
 
 .box
   border-top: 5px solid lightgrey
