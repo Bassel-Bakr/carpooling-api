@@ -1,29 +1,40 @@
+// uncomment to disable logging
+// console.log = () => {};
+
+// backend framework
 const express = require("express");
+// config file
 const config = require("./config");
+// parse request body
 const bodyParser = require("body-parser");
 
+// handle auth
 const passport = require("passport");
-const cookieSession = require('cookie-session')
 const LocalStrategy = require("passport-local").Strategy;
 
+// for presistent sessions
+const cookieSession = require('cookie-session')
+
 // for encrypting and decrypting passwords
-const errors = require("../middle/errors");
 const bcrypt = require("bcrypt")
 
-// app
+// common error messages
+const errors = require("../middle/errors");
+
+// app instance
 const app = express();
 
 // throw errors
 const throwError = (err) => { throw err; };
 
 // database
-const dbDriver = new require("./dbDriver");
+const dbDriver = require("./dbDriver");
 const database = new dbDriver();
 database.connect();
 
 // use pug engine
 // app.set("view engine", "pug");
-app.set("views", "./public");
+// app.set("views", "./public");
 
 // attach body-parser
 app.use(bodyParser.urlencoded({

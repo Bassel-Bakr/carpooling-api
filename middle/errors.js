@@ -28,6 +28,9 @@ module.exports = {
         invalidFormat: "Invalid api call",
         quota: "Use limit exceeded",
         keyNotFound: "API key not given",
-        incorrectKey: "Incorrect API key"
+        incorrectKey: "Incorrect API key",
+        invalidLocation: "Invalid location",
+        invalidTime: "Invalid date/time, use seconds since epoch",
+        missingId: "Driver ID is missing"
     }
 }

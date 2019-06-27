@@ -16,9 +16,10 @@ const User = mongoose.model("user", new mongoose.Schema({
 
 const Driver = mongoose.model("driver", new mongoose.Schema({
     id: { type: String, required: true },
-    latitude: { type: String, required: true },
-    longitude: { type: String, required: true },
-    seen: { type: String, required: true }
+    boss: { type: String, required: true },
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
+    seen: { type: Number, required: true }
 }));
 
 class MongoDriver extends DatabaseDriverInterface {
@@ -90,7 +91,6 @@ class MongoDriver extends DatabaseDriverInterface {
                     callback(errors.database.notFound, null);
             })
             .catch(throwError);
-        console.log("getuserByName");
 
     }
 
@@ -111,6 +111,56 @@ class MongoDriver extends DatabaseDriverInterface {
         console.log(isDark);
         User.findOneAndUpdate({ name }, { darkTheme: isDark })
             .exec();
+    }
+
+    // Driver
+    /**
+     *
+     *
+     * @param {*} id
+     * @param {*} boss
+     * @param {*} latitude
+     * @param {*} longitude
+     * @param {*} callback
+     * @memberof MongoDriver
+     */
+    updateDriver(id, boss, latitude, longitude, callback) {
+        callback = callback || (() => { });
+        const seen = (new Date()).getTime() / 1000;
+        Driver.updateOne({ id }, { id, boss, latitude, longitude, seen }, { upsert: true })
+            .exec()
+            .then(_ => callback())
+            .catch(throwError);
+    }
+
+    /**
+     *
+     *
+     * @param {*} lat1
+     * @param {*} lng1
+     * @param {*} lat2
+     * @param {*} lng2
+     * @param {*} seen last time seen
+     * @memberof MongoDriver
+     */
+    getDriversInBox(boss, lat1, lng1, lat2, lng2, seen, callback) {
+        const [lt1, lt2] = [Math.min(lat1, lat2), Math.max(lat1, lat2)]
+        const [lg1, lg2] = [Math.min(lng1, lng2), Math.max(lng1, lng2)]
+        Driver.find({
+            boss,
+            $and: [
+                // lt1 <= latitude <= lt2
+                { latitude: { $gte: lt1, $lte: lt2 } },
+                // lg1 <= longitude <= lg2
+                { longitude: { $gte: lg1, $lte: lg2 } },
+                // seen after [seen]
+                { seen: { $gte: seen } }
+            ]
+        })
+            .exec()
+            .then(drivers => callback(drivers))
+            .catch(throwError);
+
     }
 }
 

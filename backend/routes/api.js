@@ -45,12 +45,46 @@ module.exports = function (database) {
     });
 
     /**
+     * Get all drivers within a box seen after some point in time (since epoch in seconds)
+     */
+    router.get("/drivers_in", (req, res) => {
+        const query = req.query;
+        const since = Number(query.since);
+        if (!query.since || since == Number.NaN) {
+            res.status(401).end(errors.api.invalidTime);
+        } else if (checkers.point(query, "point1") &&
+            checkers.point(query, "point2")) {
+            const [latitude1, longitude1] = query.point1.split(',').map(Number);
+            const [latitude2, longitude2] = query.point2.split(',').map(Number);
+            database.getDriversInBox(req.apiHolder.name,
+                latitude1,
+                longitude1,
+                latitude2,
+                longitude2,
+                since,
+                drivers => res.json(drivers)
+            );
+        } else {
+            res.status(401).end(errors.api.invalidLocation);
+        }
+    });
+
+    /**
      * update driver location with [id, latitude, longitude]
      */
     router.post("/update_driver", (req, res) => {
         const query = req.query;
-        res.json(query);
+        if (!query.id) {
+            res.status(401).end(errors.api.missingId);
+        } else if (checkers.point(query, "at")) {
+            const [latitude, longitude] = query.at.split(',').map(Number);
+            database.updateDriver(query.id, req.apiHolder.name, latitude, longitude);
+            res.end("sent");
+        } else {
+            res.status(401).end(errors.api.invalidLocation);
+        }
     });
+
 
     return router;
 }
