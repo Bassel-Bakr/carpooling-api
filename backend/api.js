@@ -10,7 +10,7 @@ const axios = require("axios");
  * @returns
  */
 async function getRoute({from, to, local = "us", vehicle = "car", key}) {
-    const qString = `https://graphhopper.com/api/1/route?point=${from}&point=${to}&vehicle=${vehicle}&locale=${local}&calc_points=true&key=${key}&points_encoded=false`;
+    const qString = `https://graphhopper.com/api/1/route?point=${from}&point=${to}&vehicle=${vehicle}&locale=${local}&calc_points=true&key=${API_KEY}&points_encoded=false`;
     const result = await axios.get(qString);
     const path = result.data.paths[0];
     const route = {

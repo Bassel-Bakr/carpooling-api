@@ -50,7 +50,7 @@ export default {
 
 <style lang="sass">
 .v-card
-    box-shadow: 0 0 1px 1px yellow
+    box-shadow: 0 0 1px 1px black
     overflow: auto
 
 .v-card-api

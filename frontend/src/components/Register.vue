@@ -55,7 +55,7 @@
 <script>
 import eventBus from "../eventBus";
 import limits from "../../../middle/limits";
-
+import axios from "axios";
 export default {
   name: "Register",
   data() {
@@ -64,7 +64,6 @@ export default {
       email: "",
       password: "",
       repeatPassword: "",
-      action: "api/register",
       snackbar: false,
       message: ""
     };
@@ -120,7 +119,7 @@ export default {
       };
 
       console.log(credentials);
-      this.$http.post(this.action, credentials).then(
+      this.$http.post("register", credentials).then(
         res => {
           this.message = res.body;
           this.snackbar = true;

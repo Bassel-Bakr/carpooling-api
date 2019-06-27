@@ -22,5 +22,10 @@ module.exports = {
         created: "User created successfully",
         failed: "Failed to create user"
 
+    },
+
+    api: {
+        invalidFormat: "Invalid api call",
+        quota: "Use limit exceeded"
     }
 }

@@ -2,7 +2,7 @@
   <v-app :dark="darkTheme" @userLogin="update">
     <v-toolbar app>
       <v-toolbar-side-icon @click.stop="showDrawer = !showDrawer"/>
-      <v-toolbar-side-icon @click.stop="darkTheme = !darkTheme">
+      <v-toolbar-side-icon @click.stop="changeTheme">
         <v-icon>brightness_medium</v-icon>
       </v-toolbar-side-icon>
       <div v-if="user">Hello {{ user.name }}</div>
@@ -89,19 +89,30 @@ export default {
       router.replace("Register");
     },
     logout() {
-      this.$http.get("api/logout").then(
+      this.$http.get("logout").then(
         res => {
-          this.user = false;
+          this.user = null;
         },
         err => console.log(err)
       );
     },
     update() {
       console.log("updating data");
-      this.$http.get("api/is_auth").then(res => {
+      this.$http.get("is_auth").then(res => {
         console.log(res);
-        this.user = res.status == 200 ? res.body : null;
+        if(res.status == 200) {
+          this.user = res.body;
+          this.darkTheme = this.user.darkTheme;
+          console.log(this.user);
+        }else {
+          this.user = null;
+        }
       });
+    },
+    changeTheme() {
+      this.darkTheme = !this.darkTheme;
+      if(this.user)
+        this.$http.post("change_theme", { isDark: this.darkTheme });
     }
   },
   mounted() {

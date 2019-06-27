@@ -1,3 +1,5 @@
+import constants from "../../middle/apiConstants";
+
 const commonOptions = {
     from: {
         name: "from",
@@ -9,7 +11,7 @@ const commonOptions = {
     },
     vehicle: {
         name: "vehicle",
-        description: "type of vehicle in use default is car"
+        description: "type of vehicle in use, default is car"
     },
     local: {
         name: "local",

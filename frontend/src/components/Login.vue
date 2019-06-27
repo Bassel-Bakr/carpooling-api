@@ -39,12 +39,7 @@
 import router from "../router";
 import eventBus from "../eventBus";
 import limits from "../../../middle/limits";
-import {
-  required,
-  sameAs,
-  minLength,
-  maxLength
-} from "vuelidate/lib/validators";
+import axios from "axios";
 
 export default {
   name: "Login",
@@ -52,7 +47,7 @@ export default {
     return {
       name: "",
       password: "",
-      action: "api/login",
+      action: "login",
       snackbar: false,
       message: ""
     };
@@ -88,7 +83,7 @@ export default {
         password: this.password
       };
 
-      console.log(credentials);
+      // console.log(credentials);
       this.$http.post(this.action, credentials).then(
         res => {
           eventBus.$emit("userLogin");

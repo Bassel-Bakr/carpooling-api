@@ -3,5 +3,6 @@ module.exports = {
     user: "bassel",
     password: "bassel",
     host:"localhost",
-    port: "27017"
+    port: "27017",
+    passwordSaltRounds: 10
 };
