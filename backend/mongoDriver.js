@@ -14,6 +14,13 @@ const User = mongoose.model("user", new mongoose.Schema({
     darkTheme: { type: Boolean, default: true }
 }));
 
+const Driver = mongoose.model("driver", new mongoose.Schema({
+    id: { type: String, required: true },
+    latitude: { type: String, required: true },
+    longitude: { type: String, required: true },
+    seen: { type: String, required: true }
+}));
+
 class MongoDriver extends DatabaseDriverInterface {
     constructor() {
         super();
@@ -21,9 +28,12 @@ class MongoDriver extends DatabaseDriverInterface {
     }
 
     connect(callback) {
+        if (!callback) callback = () => { };
         mongoose.set('useNewUrlParser', true);
         mongoose.set('useFindAndModify', false);
-        mongoose.connect(`mongodb://${config.user}:${config.password}@${config.host}:${config.port}/${config.db}`);
+        mongoose.connect(`mongodb://${config.user}:${config.password}@${config.host}:${config.port}/${config.db}`)
+            .then(callback())
+            .catch(throwError);
         this.connection = mongoose.connection;
         this.connection.on("error", err => {
             console.error("Mongo Connection failed!");
@@ -39,6 +49,7 @@ class MongoDriver extends DatabaseDriverInterface {
                 { email: user.email }
             ]
         }, (err, instance) => {
+            if (err) throw err;
             if (instance) { // user already exists
                 console.log(instance);
                 callback(null, instance.name == user.name ? errors.database.exists : errors.database.emailExists);
@@ -70,14 +81,30 @@ class MongoDriver extends DatabaseDriverInterface {
 
     getUserByName(name, callback) {
         // TODO: validate input and protect against sql injection
-        User.findOne({ name }, (err, instance) => {
-            if (err)
-                callback(err, null);
-            else if (instance)
-                callback(null, instance);
-            else
-                callback(errors.database.notFound, null);
-        });
+        User.findOne({ name })
+            .exec()
+            .then(instance => {
+                if (instance)
+                    callback(null, instance);
+                else
+                    callback(errors.database.notFound, null);
+            })
+            .catch(throwError);
+        console.log("getuserByName");
+
+    }
+
+    getUserByKey(key, callback) {
+        // TODO: validate input and protect against sql injection
+        User.findOne({ apiKey: key })
+            .exec()
+            .then(instance => {
+                if (instance)
+                    callback(null, instance);
+                else
+                    callback(errors.database.notFound, null);
+            })
+            .catch(throwError);
     }
 
     changeTheme(name, isDark) {

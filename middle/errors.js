@@ -26,6 +26,8 @@ module.exports = {
 
     api: {
         invalidFormat: "Invalid api call",
-        quota: "Use limit exceeded"
+        quota: "Use limit exceeded",
+        keyNotFound: "API key not given",
+        incorrectKey: "Incorrect API key"
     }
 }
