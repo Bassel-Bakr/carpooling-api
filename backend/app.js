@@ -1,6 +1,5 @@
 const express = require("express");
 const config = require("./config");
-const path = require("path");
 const bodyParser = require("body-parser");
 
 const passport = require("passport");
@@ -8,7 +7,7 @@ const cookieSession = require('cookie-session')
 const LocalStrategy = require("passport-local").Strategy;
 
 // for encrypting and decrypting passwords
-const saltRounds = 10;
+const errors = require("../middle/errors");
 const bcrypt = require("bcrypt")
 
 // app
@@ -52,9 +51,7 @@ passport.use(
     },
         (username, password, done) => {
             database.getUserByName(username, (err, user) => {
-                if (err)
-                    throw err;
-                if (!user) {
+                if (err) {
                     done(null, false, {
                         message: "No such user!"
                     });
@@ -85,7 +82,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
     console.log("deserialize");
     database.getUserById(id, (err, user) => {
-        // console.log(id, user);
         if (user) {
             // clone
             let userCopy = JSON.parse(JSON.stringify(user));
@@ -115,7 +111,7 @@ app.get("/is_auth", isAuth);
 // change last used theme
 app.post("/change_theme", (req, res) => {
     console.log("new request")
-    if(req.isAuthenticated()) {
+    if (req.isAuthenticated()) {
         database.changeTheme(req.user.name, req.body.isDark);
         res.status(200).end();
     } else {
@@ -131,11 +127,27 @@ function authMiddleware(req, res, next) {
     }
 }
 
+function hasCorrectApiKey(req, res, next) {
+    const key = req.query.key;
+    if (key) {
+        database.getUserByKey(key, (err, user) => {
+            if (err) {
+                res.status(401).end(err);
+            } else {
+                req.apiHolder = user;
+                next();
+            }
+        });
+    } else {
+        res.status(401).end(errors.api.keyNotFound);
+    }
+}
+
 function bindRoutes(app) {
     const authRoutes = require("./routes/auth")(passport, database);
     const apiRoutes = require("./routes/api")(database);
     app.use(authRoutes);
-    app.use("/api", apiRoutes);
+    app.use("/api", hasCorrectApiKey, apiRoutes);
 }
 
 

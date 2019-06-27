@@ -7,13 +7,6 @@ module.exports = function (database) {
 
 
     const checkers = {
-        key(obj) {
-            if (obj.key && /* in database */ true) {
-                return true;
-            } else {
-                return false;
-            }
-        },
         point(obj, name) {
             const p = obj[name];
             let okay = false;
@@ -39,18 +32,17 @@ module.exports = function (database) {
      */
     router.get("/route", (req, res) => {
         const query = req.query;
+        const user = req.apiHolder;
+        console.log(user);
         // validate
-        if (query &&
-            checkers.key(query) &&
-            checkers.point(query, "from") &&
+        if (checkers.point(query, "from") &&
             checkers.point(query, "to") &&
             checkers.vehicle(query)) {
-            res.status(403).end(errors.api.invalidFormat);
-        } else {
             api.getRoute(query).then(route => res.json(route)).catch(err => { console.log(err); res.status(500).end() });
+        } else {
+            res.status(403).end(errors.api.invalidFormat);
         }
     });
-
 
     /**
      * update driver location with [id, latitude, longitude]

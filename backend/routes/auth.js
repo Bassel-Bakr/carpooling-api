@@ -2,6 +2,8 @@ module.exports = (passport, database) => {
     const express = require("express");
     const router = express.Router();
     const errors = require("../../middle/errors");
+    const saltRounds = 10;
+    const bcrypt = require("bcrypt")
 
 
     // router.get("/login", (req, res) => res.render("login"));
@@ -14,7 +16,7 @@ module.exports = (passport, database) => {
     });
 
     router.post("/login", (req, res, next) => {
-
+        console.log("login route");
         passport.authenticate("local", (err, user, info) => {
             if (err) {
                 return res.status(401).end(errors.login.failed, info);
