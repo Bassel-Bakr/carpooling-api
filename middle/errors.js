@@ -31,6 +31,7 @@ module.exports = {
         incorrectKey: "Incorrect API key",
         invalidLocation: "Invalid location",
         invalidTime: "Invalid date/time, use seconds since epoch",
-        missingId: "Driver ID is missing"
+        missingId: "Driver ID is missing",
+        driverNotFound: "No such driver"
     }
 }

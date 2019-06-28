@@ -1,9 +1,35 @@
 import constants from "../../middle/apiConstants";
 
+const apiPrefix = "api";
+
 const commonOptions = {
+    id: {
+        name: "id",
+        description: "driver id"
+    },
+    seen: {
+        name: "seen",
+        description: "last seen time (seconds since epoch)"
+    },
+    since: {
+        name: "since",
+        description: "the time after which he should've been active (seconds since epoch)"
+    },
     from: {
         name: "from",
         description: "start point"
+    },
+    at: {
+        name: "at",
+        description: "driver location"
+    },
+    point1: {
+        name: "point1",
+        description: "1st coordinate point"
+    },
+    point2: {
+        name: "point2",
+        description: "2nd coordinate point"
     },
     to: {
         name: "to",
@@ -28,6 +54,7 @@ export default [
     {
         name: "Routing",
         description: "Returns a list of points and roads to go from [from] point to [to] point",
+        methods: "get",
         options: [
             commonOptions.from,
             commonOptions.to,
@@ -35,7 +62,7 @@ export default [
             commonOptions.local,
             commonOptions.key,
         ],
-        example: "api/route?from=30.06898,31.3558&to=30.06220,31.35159&vehicle=car&locale=us&key=[your api key]",
+        example: `${apiPrefix}/route?from=30.06898,31.3558&to=30.06220,31.35159&vehicle=car&locale=us&key=[your api key]`,
         output: JSON.stringify({
             "time": 217582,
             "distance": 1580.92,
@@ -179,4 +206,77 @@ export default [
             ]
         }, null, 4)
     },
+    {
+        name: "Update Driver Location",
+        description: "Updates driver's last saved location creating it if it doesn't exists",
+        methods: "post",
+        options: [
+            commonOptions.id,
+            commonOptions.at,
+            commonOptions.key,
+            commonOptions.seen,
+        ],
+        example: `${apiPrefix}/update_driver?id=lovelydriver7at=12.1561561,30.16514&seen=13203215&key=[your api key]`,
+        output: JSON.stringify("sent", null, 4)
+    },
+    {
+        name: "Get Driver",
+        description: "Returns the data of a driver with some id",
+        methods: "get",
+        options: [
+            commonOptions.id,
+            commonOptions.key,
+        ],
+        example: `${apiPrefix}/get_driver?id=lovelydriver&key=[your api key]`,
+        output: JSON.stringify({
+            "_id": "5d14d2a7259fce8c82985996",
+            "id": "lol",
+            "__v": 0,
+            "boss": "hossam",
+            "latitude": 5,
+            "longitude": 5,
+            "seen": 1561645735.548
+        }, null, 4)
+    },
+    {
+        name: "Get All Drivers",
+        description: "Returns a list of all recorded drivers",
+        methods: "get",
+        options: [
+            commonOptions.key,
+        ],
+        example: `${apiPrefix}/get_all_drivers?key=[your api key]`,
+        output: JSON.stringify([
+            {
+                "_id": "5d14d2a7259fce8c82985996",
+                "id": "lol",
+                "__v": 0,
+                "boss": "hossam",
+                "latitude": 5,
+                "longitude": 5,
+                "seen": 1561645735.548
+            }
+        ], null, 4)
+    },
+    {
+        name: "Delete Driver",
+        description: "Deletes a driver if it exists",
+        methods: "delete",
+        options: [
+            commonOptions.id,
+            commonOptions.key,
+        ],
+        example: `${apiPrefix}/delete_driver?id=lovelydriver&key=[your api key]`,
+        output: JSON.stringify("deleted", null, 4)
+    },
+    {
+        name: "Delete All Drivers",
+        description: "Deletes all drivers",
+        methods: "delete",
+        options: [
+            commonOptions.key,
+        ],
+        example: `${apiPrefix}/delete_all_drivers?key=[your api key]`,
+        output: JSON.stringify("deleted", null, 4)
+    }
 ];

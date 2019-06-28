@@ -6,6 +6,7 @@ module.exports = function (database) {
     const constants = require("../../middle/apiConstants");
 
 
+    // validators
     const checkers = {
         point(obj, name) {
             const p = obj[name];
@@ -83,6 +84,52 @@ module.exports = function (database) {
         } else {
             res.status(401).end(errors.api.invalidLocation);
         }
+    });
+
+    /**
+     * get driver by id
+     */
+    router.get("/get_driver", (req, res) => {
+        const query = req.query;
+        if (!query.id) {
+            res.status(401).end(errors.api.missingId);
+        } else {
+            database.getDriverById(query.id, req.apiHolder.name, (driver) => {
+                if (driver)
+                    res.json(driver);
+                else
+                    res.status(404).end(errors.api.driverNotFound);
+            });
+        }
+    });
+
+    /**
+     * get all drivers
+     */
+    router.get("/get_all_drivers", (req, res) =>
+        database.getAllDrivers(req.apiHolder.name, (drivers) => res.json(drivers))
+    );
+
+    /**
+     * delete driver by id if it exists
+     */
+    router.delete("/delete_driver", (req, res) => {
+        const query = req.query;
+        if(query.id) {
+            database.deleteDriver(query.id, req.apiHolder.name);
+            res.end("deleted");
+        } else {
+            res.status(401).end(errors.api.missingId);
+        }
+    });
+
+    /**
+     * delete all drivers
+     */
+    router.delete("/delete_all_drivers", (req, res) => {
+        const query = req.query;
+        database.deleteAllDrivers(req.apiHolder.name);
+        res.end("deleted");
     });
 
 

@@ -60,7 +60,7 @@ class MongoDriver extends DatabaseDriverInterface {
                         user.password = hash;
                         User.create({ ...user, apiKey: uuid() })
                             .then(instance => callback(null, errors.database.created))
-                            .catch(err => callback(err, null));
+                            .catch(throwError);
                     })
                     .catch(throwError);
 
@@ -129,7 +129,33 @@ class MongoDriver extends DatabaseDriverInterface {
         const seen = (new Date()).getTime() / 1000;
         Driver.updateOne({ id }, { id, boss, latitude, longitude, seen }, { upsert: true })
             .exec()
-            .then(_ => callback())
+            .then(callback)
+            .catch(throwError);
+    }
+
+    getDriverById(id, boss, callback) {
+        Driver.findOne({ id, boss })
+            .exec()
+            .then(callback)
+            .catch(throwError);
+    }
+
+    getAllDrivers(boss, callback) {
+        Driver.find({ boss })
+            .exec()
+            .then(callback)
+            .catch(throwError);
+    }
+
+    deleteDriver(id, boss) {
+        Driver.deleteOne({ id, boss })
+            .exec()
+            .catch(throwError);
+    }
+
+    deleteAllDrivers(boss) {
+        Driver.deleteMany({ boss })
+            .exec()
             .catch(throwError);
     }
 
@@ -158,7 +184,7 @@ class MongoDriver extends DatabaseDriverInterface {
             ]
         })
             .exec()
-            .then(drivers => callback(drivers))
+            .then(callback)
             .catch(throwError);
 
     }
