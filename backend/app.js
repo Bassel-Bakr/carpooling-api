@@ -161,7 +161,6 @@ function bindRoutes(app) {
     app.use("/api", hasCorrectApiKey, apiRoutes);
 }
 
-
 // 404 not found handler
 app.use((req, res) => res.status(404).end("404"));
 
