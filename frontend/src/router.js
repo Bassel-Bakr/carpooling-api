@@ -7,6 +7,7 @@ import API from "./components/API";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Profile from "./components/Profile";
 
 export const routes = [ // all routes
   {
@@ -14,6 +15,14 @@ export const routes = [ // all routes
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    guestOnly: false,
+    userOnly: true,
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    props: true,
   },
   {
     guestOnly: false,

@@ -109,7 +109,8 @@ bindRoutes(app);
 
 function isAuth(req, res) {
     if (req.isAuthenticated()) {
-        const user = JSON.stringify(req.user)
+        let user = JSON.stringify(req.user)
+        user.password = null;
         delete user.password;
         res.status(200).end(user);
     } else {

@@ -30,10 +30,10 @@
           </v-list-tile>
         </v-list>
       </v-toolbar>
-
       <v-list dense>
         <v-list-tile v-for="route in routes" :key="route.path" @click.stop>
-          <router-link tag="v-list-tile-content" :to="route.path">{{route.name}}</router-link>
+          <router-link v-if="route.name != 'Profile'" tag="v-list-tile-content" :to="route.name">{{route.name}}</router-link>
+          <router-link v-else tag="v-list-tile-content" :to="{name: route.name, params: { user }}">{{route.name}}</router-link>
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
@@ -100,18 +100,18 @@ export default {
       console.log("updating data");
       this.$http.get("is_auth").then(res => {
         console.log(res);
-        if(res.status == 200) {
+        if (res.status == 200) {
           this.user = res.body;
           this.darkTheme = this.user.darkTheme;
           console.log(this.user);
-        }else {
+        } else {
           this.user = null;
         }
       });
     },
     changeTheme() {
       this.darkTheme = !this.darkTheme;
-      if(this.user)
+      if (this.user)
         this.$http.post("change_theme", { isDark: this.darkTheme });
     }
   },
